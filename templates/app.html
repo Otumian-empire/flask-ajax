@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Flask Ajax</title>
+</head>
+
+<body>
+    <div>
+        <p id="msg"></p>
+    </div>
+
+    <h1>jQuery Example</h1>
+
+    <form action="" method="POST">
+
+        <!-- filename -->
+        <div>
+            <label for="firstName">First Name: </label>
+            <input type='text' size='10' name='firstName' id='firstName'>
+        </div>
+
+        <!-- lastName -->
+        <div>
+            <label for="lastName">LastName</label>
+            <input type='text' size='10' name='lastName' id="lastName">
+        </div>
+
+        <!-- button -->
+        <div>
+            <button id='addName'>Add Name</button>
+        </div>
+    </form>
+
+    <div>
+        <h1>Names</h1>
+        <ul>
+            <span id='result'></span>
+        </ul>
+    </div>
+
+
+
+    <script src="{{url_for('static', filename='jquery-3.4.1.js')}}"></script>
+    <script src="{{url_for('static', filename='app.js')}}"></script>
+</body>
+
+</html>
