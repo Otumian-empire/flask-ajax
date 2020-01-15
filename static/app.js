@@ -3,7 +3,7 @@ $(function () {
         e.preventDefault()
 
         $.ajax({
-            url: '/process',
+            url: '/insert',
             type: 'POST',
             dataType: 'json',
             data: {
@@ -15,9 +15,8 @@ $(function () {
                 if (response.response_object['status'] === 1) {
                     $("#msg").text('');
                     add_item(response.response_object['result'])
-                    // $("#result").text(response.response_object['result']);
+
                 } else {
-                    // $("#result").text('');
                     $("#msg").text(response.response_object['result']);
                 }
 
@@ -27,7 +26,6 @@ $(function () {
             },
             error: function (error) {
                 $('#msg').text(error.response_object);
-                // console.log(error.response_object['result'])
             }
         })
 
@@ -57,8 +55,34 @@ $(function () {
         $('#list').prepend(li)
 
         $('.close-btn').on('click', function () {
+
             // make request to remove item from the database
-            $(this).parent().remove()
+            $.ajax({
+                url: '/delete/' + data,
+                type: 'DELETE',
+                dataType: 'json',
+                success: function (response) {
+
+                    if (response.response_object['status'] === 1) {
+
+                        $(this).parent().remove()
+                        // $("#msg").text('Task deleted');
+                        location.reload(true)
+
+                    }/*  else {
+                        // $("#msg").text('Task not deleted');
+                    } */
+
+                    $('#firstName').val('')
+                    $('#lastName').val('')
+
+                },
+                error: function (error) {
+                    $('#msg').text(error.response_object);
+                }
+            })
+
+
         })
     }
 })

@@ -1,13 +1,48 @@
-from flask import Flask, jsonify, render_template, request
 import sqlite3
 
+from flask import Flask, flash, jsonify, render_template, request
 
 app = Flask(__name__)
 DATABASE_NAME = "flask_ajax_db"
 
 
-@app.route('/process', methods=['POST'])
-def add_numbers():
+@app.route('/delete/<data>', methods=['DELETE'])
+def delete(data):
+    status = 0
+    result = ''
+    message = "Task not deleted"
+
+    try:
+        first_name, last_name = data.split(" ")
+
+        conn = sqlite3.connect(DATABASE_NAME)
+        cur = conn.cursor()
+        result = conn.execute(
+            "DELETE FROM `info` WHERE `firstname` = ? AND `lastname` = ?", (first_name, last_name)).rowcount
+
+        conn.commit()
+
+    except Exception as e:
+        result = e
+    finally:
+        cur.close()
+        conn.close()
+
+    if result:
+        status = 1
+        message = "Task deleted"
+
+    response_object = {
+        'status': status,
+        'result': result
+    }
+
+    flash(message)
+    return jsonify(response_object=response_object)
+
+
+@app.route('/insert', methods=['POST'])
+def insert():
 
     status = 0
     result = "Provide first or last name"
