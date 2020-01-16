@@ -2,33 +2,62 @@ import sqlite3
 
 from flask import Flask, flash, jsonify, render_template, request
 
+
 app = Flask(__name__)
+app.secret_key = '#$%1RTY2^&3FGh4%^&*{"5)(iukVT^ioIo_\{\:DFDFHJHkjn})'
+
 DATABASE_NAME = "flask_ajax_db"
 
 
-@app.route('/delete/<data>', methods=['DELETE'])
-def delete(data):
+@app.route('/read', methods=['GET', 'POST'])
+def read():
+    status = 0
+    result = []
+    message = ''
+
+    try:
+        conn = sqlite3.connect(DATABASE_NAME)
+        cur = conn.cursor()
+        result = cur.execute(
+            "SELECT * FROM `info` ORDER BY `id` DESC").fetchall()
+
+        conn.commit()
+        cur.close()
+        conn.close()
+    except Exception as e:
+        print(e)
+
+    if result:
+        status = 1
+
+    response_object = {
+        'status': status,
+        'result': result
+    }
+
+    # flash(message, 'info')
+    return jsonify(response_object=response_object)
+
+
+@app.route('/delete/<id>', methods=['DELETE'])
+def delete(id):
     status = 0
     result = ''
     message = "Task not deleted"
 
     try:
-        first_name, last_name = data.split(" ")
-
         conn = sqlite3.connect(DATABASE_NAME)
         cur = conn.cursor()
-        result = conn.execute(
-            "DELETE FROM `info` WHERE `firstname` = ? AND `lastname` = ?", (first_name, last_name)).rowcount
+        result = cur.execute(
+            "DELETE FROM `info` WHERE `id` = ?", (id, )).rowcount
 
         conn.commit()
-
-    except Exception as e:
-        result = e
-    finally:
         cur.close()
         conn.close()
+    except Exception as e:
+        print(e)
 
-    if result:
+    if result > 0:
         status = 1
         message = "Task deleted"
 
@@ -37,7 +66,7 @@ def delete(data):
         'result': result
     }
 
-    flash(message)
+    flash(message, 'info')
     return jsonify(response_object=response_object)
 
 
@@ -53,16 +82,15 @@ def insert():
     try:
         conn = sqlite3.connect(DATABASE_NAME)
         cur = conn.cursor()
-        result = conn.execute(
+        result = cur.execute(
             "INSERT INTO `info`(`firstname`, `lastname`) VALUES(?, ?)", (first_name, last_name)).rowcount
 
         conn.commit()
+        cur.close()
+        conn.close()
 
     except Exception as e:
         print(e)
-    finally:
-        cur.close()
-        conn.close()
 
     if first_name or last_name:
         status = 1
@@ -78,10 +106,8 @@ def insert():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-
     return render_template('app.html')
 
 
 if __name__ == "__main__":
     app.run(debug=True)
-    app.secret_key = '#$%1RTY2^&3FGh4%^&*{"5)(iukVT^ioIo_\{\:DFDFHJHkjn})'

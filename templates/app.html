@@ -13,6 +13,16 @@
         <p id="msg"></p>
     </div>
 
+    <div id="" class="text-lowercase">
+        {% with messages = get_flashed_messages(with_categories = true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
     <h1>jQuery Example</h1>
 
     <form action="" method="POST">
@@ -35,14 +45,23 @@
         </div>
     </form>
 
+    <!-- load the data from the database here -->
     <div>
         <h1>Names</h1>
         <ul id="list">
+            {% if results %}
+                {% for data in results %}
+                    <li>
+                        <span>{{ data[1] }} {{ data[2] }}</span>
+                        <button class="close-btn">close</button>
+                        <div class="clr"></div>
+                    </li>
+                {% endfor %}
             
+            {% endif %}
+
         </ul>
     </div>
-
-
 
     <script src="{{url_for('static', filename='jquery-3.4.1.js')}}"></script>
     <script src="{{url_for('static', filename='app.js')}}"></script>
