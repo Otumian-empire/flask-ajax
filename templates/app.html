@@ -48,21 +48,10 @@
     <!-- load the data from the database here -->
     <div>
         <h1>Names</h1>
-        <ul id="list">
-            {% if results %}
-                {% for data in results %}
-                    <li>
-                        <span>{{ data[1] }} {{ data[2] }}</span>
-                        <button class="close-btn">close</button>
-                        <div class="clr"></div>
-                    </li>
-                {% endfor %}
-            
-            {% endif %}
-
-        </ul>
+        <ul id="list"></ul>
     </div>
 
+    <!-- jquery and apps javascript -->
     <script src="{{url_for('static', filename='jquery-3.4.1.js')}}"></script>
     <script src="{{url_for('static', filename='app.js')}}"></script>
 </body>

@@ -8,15 +8,15 @@ $(function () {
         success: function (response) {
 
             tasks = response.response_object['result']
-            console.log(tasks)
 
             var task_size = tasks.length
 
             for (i = 0; i < task_size; i++) {
                 id = tasks[i][0]
-                item = tasks[i][1] + "" + tasks[i][2]
+                item = tasks[i][1] + " " + tasks[i][2]
                 add_item(id, item)
             }
+
         },
         error: function (error) {
             $('#msg').text(error.response_object['result']);
@@ -75,7 +75,6 @@ $(function () {
 
         $('.close-btn').on('click', function () {
 
-            // /DELETE
             // make request to remove item from the database
             $.ajax({
                 url: '/delete/' + id,
